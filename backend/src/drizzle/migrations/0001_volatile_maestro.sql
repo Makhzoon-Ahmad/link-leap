@@ -1,0 +1,1 @@
+ALTER TABLE "linksTable" ADD COLUMN "expiry_date" timestamp DEFAULT '2025-03-18 14:57:59.346' NOT NULL;
