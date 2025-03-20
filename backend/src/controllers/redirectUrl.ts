@@ -9,12 +9,11 @@ const redirectUrl = async (req: Request, res: Response): Promise<void> => {
   try {
     const shortId = req.params.shortId;
     const shortenUrl: string = `http://localhost:${PORT}/${shortId}`;
-    const now = new Date();
     const result = await db
       .select()
       .from(linkTable)
       .where(
-        and(eq(linkTable.shortLink, shortenUrl), gt(linkTable.expiryDate, now))
+        and(eq(linkTable.shortLink, shortenUrl), gt(linkTable.expiryDate, new Date()))
       );
 
     console.log(result);

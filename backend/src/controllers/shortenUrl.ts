@@ -4,6 +4,7 @@ import { db } from "../drizzle";
 import { linkTable } from "../drizzle/schema"
 import { nanoid } from "nanoid"
 import { eq } from "drizzle-orm";
+import { addMinutes } from "date-fns";
 
 
 const urlSchema = z.object({
@@ -26,7 +27,8 @@ async function shortenUrl(req: Request, res:Response){
         const originalUrl: string = parsed.data.url;
         const result = await db.insert(linkTable).values({
             link : originalUrl,
-            shortLink: shortUrl
+            shortLink: shortUrl,
+            expiryDate: addMinutes(new Date(), 7)
         })
         
         console.log(result)
