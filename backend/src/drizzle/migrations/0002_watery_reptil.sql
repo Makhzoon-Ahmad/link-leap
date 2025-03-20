@@ -1,0 +1,1 @@
+ALTER TABLE "linksTable" ALTER COLUMN "expiry_date" DROP DEFAULT;
