@@ -3,15 +3,20 @@ import {z} from "zod";
 import { db } from "../drizzle";
 import "dotenv/config"
 import { linkTable } from "../drizzle/schema"
-import { nanoid } from "nanoid"
+// import { nanoid } from "nanoid"
+// const { nanoid } = require("nanoid");
 import { eq } from "drizzle-orm";
 import { addMinutes } from "date-fns";
+
 
 const BASE_URL = process.env.BASE_URL;
 const urlSchema = z.object({
     url : z.string().url()
 })
-
+async function nanoid(size:number) {
+    const { nanoid } = await import('nanoid');
+    return nanoid(size);
+}
 // type URL = z.infer<typeof urlSchema>
 
 async function shortenUrl(req: Request, res:Response){
@@ -23,7 +28,7 @@ async function shortenUrl(req: Request, res:Response){
             })
             return;
         }
-        const shortId: string = nanoid(7);
+        const shortId: string = await nanoid(7);
         const shortUrl: string = `${BASE_URL}/${shortId}`
         const originalUrl: string = parsed.data.url;
         const result = await db.insert(linkTable).values({
