@@ -12,6 +12,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
     "@types/date-fns": "^2.5.3",
+    "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.1",
@@ -23,6 +24,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/nanoid": "^2.1.0",
     "@types/node": "^22.13.10",
