@@ -16,7 +16,8 @@ const ButtonComponent = ({ children }: ButtonProps) => {
 
   const { url, setUrl } = context;
   async function shortenUrl(url: string) {
-    const res = await fetch("http://localhost:3000/api/v1/shortenLink", {
+    const BASE_URL  =import.meta.env.VITE_BASE_URL;
+    const res = await fetch(`${BASE_URL}/api/v1/shortenLink`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url }),
