@@ -21,15 +21,28 @@ const ButtonComponent = ({ children }: ButtonProps) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url }),
     });
-    if(!res.ok) throw new Error('Failed to Shorten URL');
+    // if(!res.ok) throw new Error('Failed to Shorten URL');
+    
     return res.json();
   }
   const mutation = useMutation({
     mutationFn: shortenUrl,
     onSuccess: (data) => {
+
+      if (!data.sucess)
+      {
+        alert(data.message)
+      }
       setShortUrl(data.shortUrl)
       
     },
+    onError:(error) => {
+
+      // console.log(error)
+      alert(error)
+
+      
+    }
   });
   function handleSubmit() {
     if (!url.trim()) return;
