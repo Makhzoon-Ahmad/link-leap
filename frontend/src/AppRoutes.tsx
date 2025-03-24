@@ -7,6 +7,8 @@ const AppRoutes = () => {
   return (
     <Routes>
         <Route path="/" element={<Home/>}></Route>
+        <Route path="/:shortlink" element={<Home/>}></Route>
+        
         <Route path="/sign" element={<UserSign/>}></Route>
     </Routes>
   )
