@@ -3,6 +3,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
+const handleSignUp = ()=>{
+    
+}
+
 const UserSign = () => {
     const navigate = useNavigate();
   return (
@@ -39,7 +43,7 @@ const UserSign = () => {
             <Input type="email" className="my-2 text-white placeholder:text-gray-300" placeholder="example@gmail.com" id="email" name="email" required></Input>
             <label htmlFor="password" className="text-gray-300">Password</label>
             <Input className="my-2 text-white placeholder:text-gray-300" placeholder="password" id="password" name="password" required></Input>
-            <Button variant="secondary" className="w-full mt-14 hover:cursor-pointer">Sign Up</Button>
+            <Button variant="secondary" className="w-full mt-14 hover:cursor-pointer" onClick={handleSignUp}>Sign Up</Button>
         
           </TabsContent>
         </Tabs>
