@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import UserSign from "./components/UserSign"
 import Home from "./components/Home"
 
-// git tutorial
+
 const AppRoutes = () => {
   return (
     <Routes>
