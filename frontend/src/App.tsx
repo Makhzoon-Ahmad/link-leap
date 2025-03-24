@@ -1,15 +1,14 @@
 // import React from 'react'
 
-import LinkProvider from "./components/LinkProvider"
-import LinkShortener from "./components/LinkShortener"
-
+import { BrowserRouter as Router } from "react-router-dom"
+import AppRoutes from "./AppRoutes"
 
 const App = () => {
   return (
     <div className='h-screen'>
-        <LinkProvider>
-            <LinkShortener/>
-        </LinkProvider>
+        <Router>
+            <AppRoutes></AppRoutes>
+        </Router>
     </div>
   )
 }
