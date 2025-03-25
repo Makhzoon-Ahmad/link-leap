@@ -30,7 +30,7 @@ const ButtonComponent = ({ children }: ButtonProps) => {
     mutationFn: shortenUrl,
     onSuccess: (data) => {
 
-      if (!data.sucess)
+      if (!data.success)
       {
         alert(data.message)
       }
