@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { UserLogInProps } from "@/AppRoutes";
 
 type ApiResponse =  { 
     message: string,
-    success: boolean
+    success: boolean,
+    token? : string
 }
 
 type UserData = {
@@ -21,7 +23,8 @@ type UserData = {
   };
 };
 
-const UserSign = () => {
+const BASE_URL  =import.meta.env.VITE_BASE_URL;
+const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
   const [userData, setUserData] = useState<UserData>({
     signUp: {
       email: "",
@@ -32,6 +35,49 @@ const UserSign = () => {
       password: "",
     },
   });
+  const handleSignIn = async (userData: UserData["signIn"]): Promise<ApiResponse> => {
+      const response = await fetch(`${BASE_URL}/api/v1/signin`,{
+        method: "POST",
+        headers:{
+          "Content-type" : "application/json"
+        },
+        body : JSON.stringify({
+          email : userData["email"],
+          password: userData["password"]
+        })
+      });
+      const result = await response.json();
+      return result;
+  }
+
+
+  const signInMutation = useMutation({
+    mutationFn: handleSignIn,
+    onSuccess: (data)=>{
+      if(!data.success){
+        alert(data.message)
+      }
+      alert(data.message)
+      localStorage.setItem("token", data.token!)
+      setUserData((prev) => ({
+        ...prev,
+        signIn: {
+          email: '',
+          password : ''
+        }
+      })
+    )
+    setLoggedIn(true);
+    setTimeout(()=>{
+      navigate('/')
+    },3000);
+    },
+    onError: (error)=>{
+      alert(error);
+    }
+  })
+  
+  
  
   const signUpMutation = useMutation({
     mutationFn : handleSignUp,
@@ -55,7 +101,7 @@ const UserSign = () => {
   })
 
   async function handleSignUp(userData: UserData["signUp"]): Promise<ApiResponse>{
-    const BASE_URL  =import.meta.env.VITE_BASE_URL;
+    
     const response = await fetch(`${BASE_URL}/api/v1/signup`,{
       method: "POST",
       headers: {
@@ -146,7 +192,10 @@ const UserSign = () => {
             <Button
               variant="secondary"
               className="w-full mt-14 hover:cursor-pointer"
-              
+              onClick={()=>{
+                signInMutation.mutate(userData["signIn"])
+              }}
+              disabled = {signInMutation.isPending ? true : false}
             >
               Sign In
             </Button>
