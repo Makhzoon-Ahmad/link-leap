@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken"
 import "dotenv/config"
 const SECRET_KEY = process.env.SECRET_KEY;
 
-interface Auth extends Request{
+export interface Auth extends Request{
     user: {
-        email: string;
+        id: number;
     }
 }
 
@@ -21,11 +21,15 @@ export const authMiddleware = (req: Auth, res: Response, next: NextFunction) => 
             return;
         }
         try {
-            const verifiedUser = jwt.verify(authHeader, SECRET_KEY!) as {email: string};
+            const verifiedUser = jwt.verify(authHeader, SECRET_KEY!) as {id: number};
             req.user = verifiedUser;
             next();
         } catch (e) {
             console.log(e);
+            return res.status(401).json({
+                message: "Unauthorized: Invalid token",
+                success: false,
+              });
         }
         
 }

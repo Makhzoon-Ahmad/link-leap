@@ -9,7 +9,7 @@ const Navigation = ({ isLoggedIn, setLoggedIn }: UserLogInProps) => {
       {isLoggedIn ? (
         <Button
           variant="secondary"
-          className="m-4 mb-0 hover:cursor-pointer"
+          className="absolute right-3 top-3 mb-0 hover:cursor-pointer"
           onClick={() => {
             setLoggedIn(false);
           }}

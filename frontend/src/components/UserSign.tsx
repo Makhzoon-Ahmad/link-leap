@@ -24,7 +24,7 @@ type UserData = {
 };
 
 const BASE_URL  =import.meta.env.VITE_BASE_URL;
-const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
+const UserSign = ({setLoggedIn}: UserLogInProps) => {
   const [userData, setUserData] = useState<UserData>({
     signUp: {
       email: "",

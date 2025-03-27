@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request,Response } from "express";
 import {z} from "zod";
 import { db } from "../drizzle";
 import "dotenv/config"
@@ -7,6 +7,7 @@ import { linkTable } from "../drizzle/schema"
 // const { nanoid } = require("nanoid");
 import { eq } from "drizzle-orm";
 import { addMinutes } from "date-fns";
+import {Auth} from "../middlewares/authMiddleware"
 
 
 const BASE_URL = process.env.BASE_URL;
@@ -28,14 +29,15 @@ async function shortenUrl(req: Request, res:Response){
             })
             return;
         }
+        const userId = (req as Auth).user?.id ?? null;
         const shortId: string = await nanoid(7);
-        const shortUrl: string = `${BASE_URL}/${shortId}`
+        const shortUrl: string = `${BASE_URL}/${shortId}`;
         const originalUrl: string = parsed.data.url;
         const result = await db.insert(linkTable).values({
             link : originalUrl,
             shortLink: shortUrl,
             expiryDate: addMinutes(new Date(), 7),
-    
+            userId: userId ?? null
         })
         
         console.log(result)
