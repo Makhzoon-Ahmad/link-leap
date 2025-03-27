@@ -32,10 +32,11 @@ const redirectUrl = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.redirect(result[0].link);
-  } catch {
+  } catch(e) {
     res.status(500).json({
       message: "Internal Server Error",
     });
+    console.log(e)
   }
 };
 
