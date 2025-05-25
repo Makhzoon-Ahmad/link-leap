@@ -7,7 +7,7 @@ import { linkTable } from "../drizzle/schema"
 // const { nanoid } = require("nanoid");
 import { eq } from "drizzle-orm";
 import { addMinutes } from "date-fns";
-import {Auth} from "../middlewares/authMiddleware"
+import {AuthRequest} from "../middlewares/authMiddleware"
 
 
 const BASE_URL = process.env.BASE_URL;
@@ -22,6 +22,7 @@ async function nanoid(size:number) {
 
 async function shortenUrl(req: Request, res:Response){
     try{
+        console.log("In shorten Url")
         const parsed = urlSchema.safeParse(req.body);
         if(!parsed.success){
             res.status(400).json({
@@ -29,7 +30,7 @@ async function shortenUrl(req: Request, res:Response){
             })
             return;
         }
-        const userId = (req as Auth).user?.id ?? null;
+        const userId = (req as AuthRequest).user?.id ?? null;
         const shortId: string = await nanoid(7);
         const shortUrl: string = `${BASE_URL}/${shortId}`;
         const originalUrl: string = parsed.data.url;

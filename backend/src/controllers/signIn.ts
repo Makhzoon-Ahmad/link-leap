@@ -45,7 +45,7 @@ export const signIn = async (req: Request, res: Response) => {
         return;
     }
     const token = jwt.sign({
-        email: user[0].email
+        userId: user[0].id
     }, SECRET_KEY!);
     res.status(200).json({
         message: "Sign in successful",
