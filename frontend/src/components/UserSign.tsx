@@ -24,7 +24,7 @@ type UserData = {
 };
 
 const BASE_URL  =import.meta.env.VITE_BASE_URL;
-const UserSign = ({setLoggedIn}: UserLogInProps) => {
+const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
   const [userData, setUserData] = useState<UserData>({
     signUp: {
       email: "",
@@ -71,6 +71,7 @@ const UserSign = ({setLoggedIn}: UserLogInProps) => {
     setTimeout(()=>{
       navigate('/')
     },3000);
+   
     },
     onError: (error)=>{
       alert(error);
@@ -199,6 +200,7 @@ const UserSign = ({setLoggedIn}: UserLogInProps) => {
             >
               Sign In
             </Button>
+            {isLoggedIn ? <div className="text-white">Redirecting</div> : null}
           </TabsContent>
           <TabsContent value="Sign Up" className="text-white">
             <label htmlFor="email" className="text-gray-300">

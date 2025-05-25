@@ -1,6 +1,7 @@
   import { Routes, Route } from "react-router-dom"
   import UserSign from "./components/UserSign"
   import Home from "./components/Home"
+import UserLinks from "./components/UserLinks"
 
   export interface UserLogInProps{
     
@@ -16,6 +17,7 @@
           {/* <Route path="/:shortlink" element={<Home/>}></Route> */}
           
           <Route path="/sign" element={<UserSign isLoggedIn= {isLoggedIn} setLoggedIn = {setLoggedIn}/>}></Route>
+          <Route path="/links" element={<UserLinks/>}></Route>
       </Routes>
     )
   }
