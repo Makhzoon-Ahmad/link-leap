@@ -20,7 +20,7 @@ async function nanoid(size:number) {
 }
 // type URL = z.infer<typeof urlSchema>
 
-async function shortenUrl(req: Request, res:Response){
+async function  shortenUrl(req: Request, res:Response){
     try{
         console.log("In shorten Url")
         const parsed = urlSchema.safeParse(req.body);
@@ -31,6 +31,7 @@ async function shortenUrl(req: Request, res:Response){
             return;
         }
         const userId = (req as AuthRequest).user?.id ?? null;
+        console.log("in shorten userid : ", userId)
         const shortId: string = await nanoid(7);
         const shortUrl: string = `${BASE_URL}/${shortId}`;
         const originalUrl: string = parsed.data.url;

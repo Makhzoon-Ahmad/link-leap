@@ -11,9 +11,10 @@ async function userLinks(req: AuthRequest, res: Response): Promise<void> {
             return;
         }
 
-        const userId = req.user.id;
-        console.log(userId)
+        const userId = req.user?.id;
+        console.log("user == > ",userId)
         const links = await db.select().from(linkTable).where(eq(linkTable.userId, userId));
+        console.log("linkssss :::::::: ", links)
 
         res.status(200).json({ links });
     } catch (error) {

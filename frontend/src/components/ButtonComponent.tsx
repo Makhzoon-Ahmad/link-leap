@@ -8,6 +8,8 @@ interface ButtonProps {
   children: ReactNode;
 }
 
+
+
 const ButtonComponent = ({ children }: ButtonProps) => {
   const context = useContext(LinkContext);
   const [shortUrl, setShortUrl] = useState<string | null>(null);
@@ -20,16 +22,20 @@ const ButtonComponent = ({ children }: ButtonProps) => {
 
   const { url, setUrl } = context;
   async function shortenUrl(url: string) {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const res = await fetch(`${BASE_URL}/api/v1/shortenLink`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url }),
-    });
-    // if(!res.ok) throw new Error('Failed to Shorten URL');
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
 
-    return res.json();
-  }
+  const res = await fetch(`${BASE_URL}/api/v1/shortenLink`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: token }), // ✅ only add if token exists
+    },
+    body: JSON.stringify({ url }),
+  });
+
+  return res.json();
+}
   const mutation = useMutation({
     mutationFn: shortenUrl,
     onSuccess: (data) => {

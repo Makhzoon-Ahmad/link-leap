@@ -8,33 +8,31 @@ export interface AuthRequest extends Request {
     user?: { id: number };
 }
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const authMiddleware = (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): void => {
     const authHeader = req.headers.authorization;
+    console.log("Authorization header:", authHeader);
 
     if (!authHeader) {
-        res.status(401).json({
-            message: "Unauthorized: No token provided",
-            success: false
-        });
-        
-        (req as any).user  = null
-        next()
-        return 
+        // No token — allow unauthenticated access
+        req.user = undefined; // or just leave it unset
+        return next();
     }
 
-    const token = authHeader;
-
     try {
-        const verifiedUser = jwt.verify(token, SECRET_KEY!) as { id: number };
-        {console.log(verifiedUser)}
-        (req as AuthRequest).user = verifiedUser; 
-        return next(); 
+        const verifiedUser = jwt.verify(authHeader, SECRET_KEY!) as { userId: number; iat: number };
+        console.log("verified user:", verifiedUser.userId);
+
+        req.user = { id: verifiedUser.userId }; // normalized
+        return next();
     } catch (e) {
         console.error("JWT Verification Error:", e);
         res.status(403).json({
             message: "Unauthorized: Invalid token",
             success: false
         });
-        return;
     }
 };
