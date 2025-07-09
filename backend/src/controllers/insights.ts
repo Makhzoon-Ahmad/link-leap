@@ -6,21 +6,22 @@ import { AuthRequest } from "../middlewares/authMiddleware";
 function getHourlyClickData(analytics: any[]) {
   // Create 24-hour structure (0-23 hours)
   const hourlyData = Array.from({ length: 24 }, (_, hour) => ({
-    hour: hour.toString().padStart(2, '0') + ':00',
-    value: 0
+    hour: hour.toString().padStart(2, "0") + ":00",
+    value: 0,
   }));
 
   // Count clicks for each hour
-  analytics.forEach(analytic => {
+  analytics.forEach((analytic) => {
     if (analytic.timestamp) {
       const date = new Date(analytic.timestamp);
       const hour = date.getHours();
-      hourlyData[hour].value+= 1;
+      hourlyData[hour].value += 1;
     }
   });
 
   return hourlyData;
-}function groupAnalyticsData(devices: any[], browsers: any[], os: any[]) {
+}
+function groupAnalyticsData(devices: any[], browsers: any[], os: any[]) {
   // Categorization mappings
   const deviceCategories = {
     mobile: [
@@ -188,7 +189,7 @@ export default async function InsightsController(
     .leftJoin(linkTable, eq(linkTable.id, linkAnalytics.linkId))
     .where(eq(linkTable.userId, userId));
 
-    const [totalClicks] = await db
+  const [totalClicks] = await db
     .select({
       clicks: count(linkAnalytics),
     })
@@ -196,7 +197,6 @@ export default async function InsightsController(
     .leftJoin(linkTable, eq(linkTable.id, linkAnalytics.linkId))
     .where(eq(linkTable.userId, userId))
     .groupBy(linkTable.link);
-
 
   const links = await db
     .select({
@@ -207,7 +207,7 @@ export default async function InsightsController(
     .leftJoin(linkTable, eq(linkTable.id, linkAnalytics.linkId))
     .where(eq(linkTable.userId, userId))
     .groupBy(linkTable.link);
-const hourlyClicks = getHourlyClickData(timestamp)
+  const hourlyClicks = getHourlyClickData(timestamp);
   const groupedData = groupAnalyticsData(device, browser, os);
   res.json({
     success: true,
@@ -218,7 +218,7 @@ const hourlyClicks = getHourlyClickData(timestamp)
       hourlyClicks,
       ip,
       links,
-      totalClicks
+      totalClicks,
     },
   });
   return;
