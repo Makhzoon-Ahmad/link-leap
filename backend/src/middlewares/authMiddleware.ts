@@ -25,7 +25,6 @@ export const authMiddleware = (
     try {
         const verifiedUser = jwt.verify(authHeader, SECRET_KEY!) as { userId: number; iat: number };
         console.log("verified user:", verifiedUser.userId);
-
         req.user = { id: verifiedUser.userId }; // normalized
         return next();
     } catch (e) {

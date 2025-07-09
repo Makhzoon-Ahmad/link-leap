@@ -19,7 +19,6 @@ const InputComponent = () => {
         value={url}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setUrl(e.target.value);
-          console.log(url);
         }}
       />
     </div>

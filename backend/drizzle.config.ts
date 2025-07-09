@@ -12,5 +12,3 @@ export default defineConfig({
     verbose:true,
     strict:true
 })
-
-// console.log(process.env.DATABASE_URL)

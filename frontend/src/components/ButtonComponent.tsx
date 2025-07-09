@@ -13,9 +13,11 @@ interface ButtonProps {
 const ButtonComponent = ({ children }: ButtonProps) => {
   const context = useContext(LinkContext);
   const [shortUrl, setShortUrl] = useState<string | null>(null);
-  const [lastOriginalUrl, setLastOriginalUrl] = useState<string | null>(null);
+  // const [lastOriginalUrl, setLastOriginalUrl] = useState<string | null>(null);
   const QRref = useRef<HTMLElement>(null);
 
+  const host = window.location.host
+  const protocol = window.location.protocol
   if (!context) {
     throw new Error("The Component must be within the Link Provider");
   }
@@ -42,17 +44,18 @@ const ButtonComponent = ({ children }: ButtonProps) => {
       if (!data.success) {
         alert(data.message);
       }
-      setShortUrl(data.shortUrl);
+      setShortUrl(`${protocol}//${host}/${data.shortUrlId}`);
     },
     onError: (error) => {
       // console.log(error)
       alert(error);
     },
   });
+
   function handleSubmit() {
     if (!url.trim()) return;
     mutation.mutate(url);
-    setLastOriginalUrl(url);
+    // setLastOriginalUrl(url);
     setUrl("");
   }
 
@@ -61,9 +64,9 @@ const ButtonComponent = ({ children }: ButtonProps) => {
     const canvas = QRref.current.querySelector("canvas"); //qrdiv.querySelector    ========>>>>> QRref = woh div jisme qr hai
     if (!canvas) return;
 
-    const url = canvas.toDataURL("image/png"); //qr image aagayi canvas mai jo bhi pixels the ==== > toDataUrl ( encode karta hai pixels ko base64 png mai )
+    // const url = canvas.toDataURL("image/png"); //qr image aagayi canvas mai jo bhi pixels the ==== > toDataUrl ( encode karta hai pixels ko base64 png mai )
     const link = document.createElement("a");
-    link.href = url;
+    link.href = shortUrl ?? "";
     link.download = "qr-code.png";
     link.click(); // a.click()
   }
@@ -79,17 +82,17 @@ const ButtonComponent = ({ children }: ButtonProps) => {
       </Button>
       {shortUrl && (
         <div className="text-white text-sm border-1 border-slate-400 rounded-md w-[350px] mt-3 flex justify-center">
-          <a href={shortUrl} className="py-2">
+          <a target="_blank" href={`${shortUrl}`} rel="noopener noreferrer" className="py-2">
             {shortUrl}
           </a>
         </div>
       )}
-      {shortUrl && lastOriginalUrl && (
+      {shortUrl && (
         <div
           ref={QRref as React.RefObject<HTMLDivElement>}
           className="text-white text-sm border-1 border-slate-400 rounded-2xl w-[350px] mt-3 flex justify-center items-center py-10 flex-col"
         >
-          <QRCode value={lastOriginalUrl} />
+          <QRCode value={shortUrl} />
           <Button
             variant="secondary"
             className="hover: cursor-pointer w-[170px] mt-4"

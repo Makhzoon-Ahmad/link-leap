@@ -6,16 +6,17 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { UserLogInProps } from "@/AppRoutes";
 
-type ApiResponse =  { 
-    message: string,
-    success: boolean,
-    token? : string
-}
+type ApiResponse = {
+  message: string;
+  success: boolean;
+  token?: string;
+};
 
 type UserData = {
   signUp: {
     email: string;
     password: string;
+    confirmPassword: string;
   };
   signIn: {
     email: string;
@@ -23,102 +24,101 @@ type UserData = {
   };
 };
 
-const BASE_URL  =import.meta.env.VITE_BASE_URL;
-const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const UserSign = ({ isLoggedIn, setLoggedIn }: UserLogInProps) => {
   const [userData, setUserData] = useState<UserData>({
     signUp: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
     signIn: {
       email: "",
       password: "",
     },
   });
-  const handleSignIn = async (userData: UserData["signIn"]): Promise<ApiResponse> => {
-      const response = await fetch(`${BASE_URL}/api/v1/signin`,{
-        method: "POST",
-        headers:{
-          "Content-type" : "application/json"
-        },
-        body : JSON.stringify({
-          email : userData["email"],
-          password: userData["password"]
-        })
-      });
-      const result = await response.json();
-      return result;
-  }
-
+  const handleSignIn = async (
+    userData: UserData["signIn"]
+  ): Promise<ApiResponse> => {
+    const response = await fetch(`${BASE_URL}/api/v1/signin`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: userData["email"],
+        password: userData["password"],
+      }),
+    });
+    const result = await response.json();
+    return result;
+  };
 
   const signInMutation = useMutation({
     mutationFn: handleSignIn,
-    onSuccess: (data)=>{
-      if(!data.success){
-        alert(data.message)
+    onSuccess: (data) => {
+      if (!data.success) {
+        alert(data.message);
       }
-      alert(data.message)
-      localStorage.setItem("token", data.token!)
+      alert(data.message);
+      localStorage.setItem("token", data.token!);
       setUserData((prev) => ({
         ...prev,
         signIn: {
-          email: '',
-          password : ''
-        }
-      })
-    )
-    setLoggedIn(true);
-    setTimeout(()=>{
-      navigate('/')
-    },3000);
-   
+          email: "",
+          password: "",
+        },
+      }));
+      setLoggedIn(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     },
-    onError: (error)=>{
+    onError: (error) => {
       alert(error);
-    }
-  })
-  
-  
- 
+    },
+  });
+
   const signUpMutation = useMutation({
-    mutationFn : handleSignUp,
-    onSuccess: (data)=>{
-      if(!data.success){
-        alert(data.message)
+    mutationFn: handleSignUp,
+    onSuccess: (data) => {
+      if (!data.success) {
+        alert(data.message);
       }
-      alert(data.message)
+      alert(data.message);
       setUserData((prev) => ({
         ...prev,
         signUp: {
-          email: '',
-          password : ''
-        }
-      })
-    )
+          email: "",
+          password: "",
+          confirmPassword: "",
+        },
+      }));
     },
-    onError: (error)=>{
+    onError: (error) => {
       alert(error);
-    }
-  })
+    },
+  });
 
-  async function handleSignUp(userData: UserData["signUp"]): Promise<ApiResponse>{
-    
-    const response = await fetch(`${BASE_URL}/api/v1/signup`,{
+  async function handleSignUp(
+    userData: UserData["signUp"]
+  ): Promise<ApiResponse> {
+    const response = await fetch(`${BASE_URL}/api/v1/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email : userData["email"],
-        password : userData["password"]
-      })
+        email: userData["email"],
+        password: userData["password"],
+      }),
     });
     const result = await response.json();
     return result;
   }
   const handleChange = (
     type: "signUp" | "signIn",
-    field: "email" | "password",
+    field: "email" | "password" | "confirmPassword",
     value: string
   ) => {
     setUserData((prev) => ({
@@ -169,10 +169,9 @@ const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
               id="email"
               name="email"
               required
-              value={userData["signIn"]['email']}
-              onChange={(e)=> {
-                
-                handleChange("signIn", "email" , e.target.value);
+              value={userData["signIn"]["email"]}
+              onChange={(e) => {
+                handleChange("signIn", "email", e.target.value);
               }}
             ></Input>
             <label htmlFor="password" className="text-gray-300">
@@ -184,19 +183,19 @@ const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
               id="password"
               name="password"
               required
-              value={userData["signIn"]['password']}
-              onChange={(e)=> {
-                
-                handleChange("signIn", "password" , e.target.value);
+              value={userData["signIn"]["password"]}
+              onChange={(e) => {
+                handleChange("signIn", "password", e.target.value);
               }}
             ></Input>
+
             <Button
               variant="secondary"
               className="w-full mt-14 hover:cursor-pointer"
-              onClick={()=>{
-                signInMutation.mutate(userData["signIn"])
+              onClick={() => {
+                signInMutation.mutate(userData["signIn"]);
               }}
-              disabled = {signInMutation.isPending ? true : false}
+              disabled={signInMutation.isPending ? true : false}
             >
               Sign In
             </Button>
@@ -213,10 +212,9 @@ const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
               id="email"
               name="email"
               required
-              value={userData["signUp"]['email']}
-              onChange={(e)=> {
-                
-                handleChange("signUp", "email" , e.target.value);
+              value={userData["signUp"]["email"]}
+              onChange={(e) => {
+                handleChange("signUp", "email", e.target.value);
               }}
             ></Input>
             <label htmlFor="password" className="text-gray-300">
@@ -228,19 +226,36 @@ const UserSign = ({isLoggedIn, setLoggedIn}: UserLogInProps) => {
               id="password"
               name="password"
               required
-              value={userData["signUp"]['password']}
-              onChange={(e)=> {
-                
-                handleChange("signUp", "password" , e.target.value);
+              value={userData["signUp"]["password"]}
+              onChange={(e) => {
+                handleChange("signUp", "password", e.target.value);
               }}
             ></Input>
+            <label htmlFor="password" className="text-gray-300">
+              Confirm Password
+            </label>
+            <Input
+              className="my-2 text-white placeholder:text-gray-300"
+              placeholder="confirm password"
+              id="confirm-password"
+              name="confirm-password"
+              required
+              value={userData["signUp"]["confirmPassword"]}
+              onChange={(e) => {
+                handleChange("signUp", "confirmPassword", e.target.value);
+              }}
+            ></Input>
+
             <Button
               variant="secondary"
               className="w-full mt-14 hover:cursor-pointer"
-              onClick={()=>{
+              onClick={() => {
                 signUpMutation.mutate(userData.signUp);
               }}
-              disabled = {signUpMutation.isPending ? true: false}
+              disabled={
+                signUpMutation.isPending ||
+                userData.signUp.password !== userData.signUp.confirmPassword
+              }
             >
               Sign Up
             </Button>

@@ -19,6 +19,7 @@ const fetchUserLinks = async () => {
   if (!response.ok) throw new Error(response.statusText);
 
   const data = await response.json();
+  console.log("data",data);
   return data.links;
 };
 
@@ -33,6 +34,8 @@ const UserLinks = () => {
     queryFn: fetchUserLinks,
     enabled: false,
   });
+  const host = window.location.host
+  const protocal = window.location.protocol
   const deleteLink = async (id: number) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const token = localStorage.getItem("token");
@@ -40,8 +43,8 @@ const UserLinks = () => {
     const res = await fetch(`${BASE_URL}/api/v1/link/${id}`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: token }),
+        "content-type": "application/json",
+        ...(token && { authorization: token }),
       },
     });
 
@@ -77,20 +80,24 @@ const UserLinks = () => {
           </thead>
           <tbody>
             {links.map((link: any) => (
-              <tr key={link.id} className="border-2 border-white rounded-xl">
+              <tr
+                key={link.id}
+                className="border-2 border-white rounded-xl"
+              >
                 <td className="px-4 py-3">
                   <a
-                    href={link.shortLink}
+                    // TODO add hostaname , protocol
+                    href={`${protocal}//${host}/${link.shortId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline hover:text-blue-300"
                   >
-                    {link.shortLink}
+                    {`${protocal}//${host}/${link.shortId}`}
                   </a>
                 </td>
                 <td className="px-4 py-3">
                   <a
-                    href={link.shortLink}
+                    href={link.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline hover:text-blue-300"
@@ -98,7 +105,7 @@ const UserLinks = () => {
                     {link.link}
                   </a>
                 </td>
-                <td className="px-4 py-3">{link.clicks ?? 0}</td>
+                <td className="px-4 py-3">{link.clicks?? "N/A"}</td>
                 <td>
                   <Button
                     variant="secondary"
